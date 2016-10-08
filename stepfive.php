@@ -8,7 +8,7 @@ $postData = array(
 );
 $json_object = json_encode($postData);
 
-// Setup cURL
+// Setup cURL 
 $ch = curl_init('http://challenge.code2040.org/api/dating');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($ch, CURLOPT_POSTFIELDS ,$json_object);
@@ -17,26 +17,25 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Content-Type: application/json',                                                                                
     'Content-Length: ' . strlen($json_object))                                                                       
 );    
-//send request
+
+
+//send post request
 $response = curl_exec($ch);
-//echo($response);
+
+
+//convert the json object to array so as to get the datestamp and interval values
 $dictionary = json_decode($response, true);
-//get the string needle and array haystack containing needle
 $datestamp = $dictionary["datestamp"];
-echo 'The datestamp is: '.$datestamp.' '."\xA";
 $interval = $dictionary["interval"];
-echo 'The interval is: '.$interval.' seconds  ';
-//$timestamp = gmdate(" H:i:s", $interval);
-//echo 'The timestamp from the interval is: '.$timestamp.'';
+
+//utilizing the add function in DateTime
 $date = new DateTime($datestamp);
-echo $date->getTimestamp(). "<br>";
 $date->add(new DateInterval('PT'.$interval.'S'));
-echo 'Hello';
 $datestamp = $date->format(DateTime::ATOM);
-echo 'Date stamp after addition: '.$datestamp.'';
+
+//manipuate the datestamp string to be the required ISO 8601 datestamp format
 $str = substr($datestamp, 0, 19);
 $str = $str."Z";
-echo 'The substring is: '.$str.'."<br>"';
 $postData = array(
     "token" => $token,
     "datestamp" => $str,
@@ -53,7 +52,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Content-Type: application/json',                                                                                
     'Content-Length: ' . strlen($json_object))                                                                       
 );    
-//send request
+//send final post request
 $response = curl_exec($ch);
 echo $response;
 
@@ -61,8 +60,4 @@ echo $response;
 ?>
 
 
-                                                                         
-//send request
-$response = curl_exec($ch);
-echo($response);
 
