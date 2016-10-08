@@ -19,23 +19,25 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 );    
 //send request
 $response = curl_exec($ch);
-//echo($response);
+
+//convert returned json object to an array and get the values
 $dictionary = json_decode($response, true);
 //get the string needle and array haystack containing needle
 $str = $dictionary["needle"];
-echo 'The needle is: '.$str.' '."\xA";
 $haystack = $dictionary["haystack"];
-$response = print_r($haystack, true);
-echo 'The haystack is: '.$response.'';
 $count = count($haystack);
 $needle = 0;
+
+//loop through array, comparing the string values to needle string. If they're equal, the index
+//is saved and we break out of the loop
 for($i=0; $i<$count; $i++){
+
 	if($haystack[$i] == $str) {
 		$needle = $i;
 		break;
 	}
 }
-echo $needle;
+//The data to send to the API
 $postData = array(
 	"token" => $token,
     "needle" => $needle,
@@ -51,7 +53,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Content-Type: application/json',                                                                                
     'Content-Length: ' . strlen($json_object))                                                                       
 );    
-//send request
+//send final post request
 $response = curl_exec($ch);
 echo($response);
 
